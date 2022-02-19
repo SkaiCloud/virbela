@@ -47,6 +47,9 @@ function GenerateCorp(howManyElevators,howManyUsers)
         Users: howManyUsers
     }
 
+    //Normally we add this value to a database
+    CorpArray[corpIDs] = Corp;
+
     //Creating Elevators
     for(let i = 0; i < howManyElevators; i++){
         GenerateElevators(corpIDs);
@@ -57,9 +60,6 @@ function GenerateCorp(howManyElevators,howManyUsers)
         GenerateNewUser(nameGen.getRandomName());
     }
 
-    //Normally we add this value to a database
-    CorpArray[corpIDs] = Corp;
-
     console.log("Corp: " + Corp.id + "\nMax Floors: " + Corp.MaxFloor + "\nElevators Amount: " + Corp.Elevators + "\nUsers Amount: " + Corp.Users)
     //Update our corpID
     corpIDs++;
@@ -67,7 +67,7 @@ function GenerateCorp(howManyElevators,howManyUsers)
 
 function getCorpMaxFloor(id)
 {
-    //return CorpArray[id].MaxFloor;
+    return CorpArray[id].MaxFloor;
 }
 //END OF CORPERATION
 
@@ -109,6 +109,7 @@ function GenerateNewUser(newUser)
         lunchHour: varlunchHour,
         endHour: varendHour
     }
+
     //increment our unique ID and add to our users array
     UserArray[userIDs] = User;
 
@@ -184,18 +185,11 @@ app.get('/api/elevators',(req,res) =>
 //get a list of all users
 app.get('/api/users',(req,res) =>
 {
-    //Here we generate our first person with some random data except the Username
-    if(userIDs == 0)
-    {
-        //Normally we would use a databse to hold these values but for simplicity we will hold our data in the app session.
-        UserArray[userIDs] = GenerateNewUser("Khen Prel");//Generating our first user
+    const getUser = {id, corpid,workfloor,LunchFloors,startHour,lunchHour,endHour,currentActivity } = req.query; 
+    let results = [];
 
-        res.send(UserArray)
-    }
-    else
-    {
-        //return a full list of user in our database
-        res.send(UserArray)
+    if (id) {
+      results = results.filter(r => r.id === id);
     }
 });
 

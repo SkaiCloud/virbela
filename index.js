@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 //import our NameGenerator.js
-const nameGen = require('./nameGenerator');
+const nameGen = require('./src/nameGenerator');
 
 //create our server
 const express = require('express');
@@ -81,6 +81,8 @@ function GenerateElevators(corpid)
         corpid: corpid,
         currentActivity: ElevatorActivity[0],
         currentFloor: 0,
+        currentCapacity:0,
+        maxcapacity: 10,
         availibleFloor: getCorpMaxFloor(corpid),
     }
     
@@ -153,29 +155,28 @@ function getRandomNumber(min, max) {
 }
 
 //PUT API
-app.put('/api/users/',(req,res) => {
-    
-    const { id } = req.params;
+//SATISFY PHASE 2
+app.put('/api/updateElevators/:id',(req,res) => {
 
-    if(!id){
-        res.status(418).send({message: 'We need an id for our generated user!'})
-    }
-    else
-    {
-        //lets generate some data for our new user
-        var newUser = GenerateNewUser(nameGen.getRandomName()); 
+    //grab the id for the endpoin
+    const id = req.params.id;
 
-        res.status(200).send({UserArray})
-    }
+    //Update data as nesscesary
+    ElevatorArray[id].currentFloor = req.body.currentFloor;
+    ElevatorArray[id].currentCapacity = req.body.currentCapacity;
+    ElevatorArray[id].currentActivity = req.body.currentActivity;
+
+    //Display result to user
+    res.send(ElevatorArray[id]);
 });
+//PUT API END
 
-//GET API
-
+//GET API START
 //get a list of all corperation
 app.get('/api/corps',(req,res) =>
 {
     //we can search and filter corperation by id, amount of floors, amount of elevators and amount of users
-    const {id, MaxFloor, Elevators, Users } = req.query;
+    const { id, MaxFloor, Elevators, Users } = req.query;
     let results = [...CorpArray];
 
     if (id) results = results.filter(r => +r.id === +id);
@@ -190,11 +191,12 @@ app.get('/api/corps',(req,res) =>
 app.get('/api/elevators',(req,res) =>
 {
     //we can search and filter elevators by id, what corperation it belongs to, what currentfloors they are own, and current activity
-    const { id, corpid, currentActivity,currentFloor, availibleFloor } = req.query;
+    const { id, corpid, currentActivity,currentFloor, availibleFloor, maxcapacity } = req.query;
     let results = [...ElevatorArray];
 
     if (id) results = results.filter(r => +r.id === +id);
     if (corpid) results = results.filter(r => +r.corpid === +corpid);
+    if( maxcapacity) results = results.filter(r => +r.maxcapacity === +maxcapacity);
     if (currentFloor) results = results.filter(r => +r.currentFloor === +currentFloor);
     if (availibleFloor) results = results.filter(r => +r.availibleFloor === +availibleFloor);
     if (currentActivity) results = results.filter(r => r.currentActivity === currentActivity);

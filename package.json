@@ -1,0 +1,25 @@
+{
+  "name": "virbela",
+  "version": "1.0.0",
+  "description": "Excercise 2 for virbela code challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "dev",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/SkaiCloud/virbela_exercise2.git"
+  },
+  "author": "Khen Prel (SkaiCloud)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SkaiCloud/virbela_exercise2/issues"
+  },
+  "homepage": "https://github.com/SkaiCloud/virbela_exercise2#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}

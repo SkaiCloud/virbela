@@ -24,13 +24,13 @@ app.listen(port, () => console.log(`Server http://localhost:${port} is live!`));
 
 //App Vars. We will generate random data so each time we launch the app it will be a different simulation.
 let WorldTime = 0; //World simulation time
-let userIDs = 0; //gives us amount of users in a building
-let eleIDs = 0; //gives us amount of elevators in a building
-let corpIDs = 0; //gives us amount of corperation we want to simulate
-const LunchFloors = [3,7,11,15,19,23]; //we designate lunch floors and lunch floors can also be work floors
-const WorkFloors = [0,1,2,4,5,6,8,9,11] //we designate work floors but work floors cannot be designated as lunch floors
-let CorpArray = [];
-let ElevatorArray = [];
+let userIDs = 0; //gives us amount of total users
+let eleIDs = 0; //gives us amount of total elevators
+let corpIDs = 0; //gives us amount of total corperation
+const LunchFloors = [3,7,11,15,19,23]; //we designate lunch floors. lunch floors can also be work floors.
+const WorkFloors = [0,1,2,4,5,6,8,9,11] //we designate work floors but work floors cannot be designated as lunch floors.
+let CorpArray = []; //Array of generated corperations
+let ElevatorArray = []; //Array of generated elevators
 let UserArray = []; //Array of generated user created by our PUT API. Normally we would write this to our database
 
 //START OF CORPERATION - Generate our Corperation and construct API
@@ -102,7 +102,7 @@ function GenerateNewUser(newUser)
         id: userIDs,
         corpid: corpIDs,
         currentActivity: 'spawn',
-        Username: newUser,
+        userName: newUser,
         workfloor: GenerateWorkFloor(),
         lunchfloor: LunchFloors[Math.floor(Math.random() * LunchFloors.length)],
         startHour: varstartHour,
@@ -185,12 +185,21 @@ app.get('/api/elevators',(req,res) =>
 //get a list of all users
 app.get('/api/users',(req,res) =>
 {
-    const getUser = {id, corpid,workfloor,LunchFloors,startHour,lunchHour,endHour,currentActivity } = req.query; 
-    let results = [];
+    //we can search and filter user by any if there data
+    const { id, corpid,workfloor,lunchfloor,startHour,lunchHour,endHour,currentActivity, userName } = req.query; 
+    let results = [...UserArray];
 
-    if (id) {
-      results = results.filter(r => r.id === id);
-    }
+    if (id) results = results.filter(r => +r.id === +id);
+    if (corpid) results = results.filter(r => +r.corpid === +corpid);
+    if (workfloor) results = results.filter(r => +r.workfloor === +workfloor);
+    if (lunchfloor) results = results.filter(r => +r.lunchfloor === +lunchfloor);
+    if (startHour) results = results.filter(r => +r.startHour === +startHour);
+    if (lunchHour) results = results.filter(r => +r.lunchHour === +lunchHour);
+    if (endHour) results = results.filter(r => +r.endHour === +endHour);
+    if (currentActivity) results = results.filter(r => r.currentActivity === currentActivity);
+    if (userName) results = results.filter(r => r.userName === userName);
+
+    res.send(results);
 });
 
 //START APP

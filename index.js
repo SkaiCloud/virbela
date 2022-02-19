@@ -32,7 +32,8 @@ const WorkFloors = [0,1,2,4,5,6,8,9,11] //we designate work floors but work floo
 let CorpArray = []; //Array of generated corperations
 let ElevatorArray = []; //Array of generated elevators
 let UserArray = []; //Array of generated user created by our PUT API. Normally we would write this to our database
-
+let ElevatorActivity = ["Idle","OpenDoor","CloseDoor","MovingUp","MovingDown","Stuck"];
+let UserActivity = ["Idle","Moving","InsideElevator","ExitElevator","Working","AtLunch","DoneWithWork"];
 //START OF CORPERATION - Generate our Corperation and construct API
 function GenerateCorp(howManyElevators,howManyUsers)
 {
@@ -78,7 +79,7 @@ function GenerateElevators(corpid)
     {
         id: eleIDs,
         corpid: corpid,
-        currentActivity: 'Idle',
+        currentActivity: ElevatorActivity[0],
         currentFloor: 0,
         availibleFloor: getCorpMaxFloor(corpid),
     }
@@ -101,7 +102,7 @@ function GenerateNewUser(newUser)
     {
         id: userIDs,
         corpid: corpIDs,
-        currentActivity: 'spawn',
+        currentActivity: UserActivity[0],
         userName: newUser,
         workfloor: GenerateWorkFloor(),
         lunchfloor: LunchFloors[Math.floor(Math.random() * LunchFloors.length)],
@@ -173,13 +174,32 @@ app.put('/api/users/',(req,res) => {
 //get a list of all corperation
 app.get('/api/corps',(req,res) =>
 {
+    //we can search and filter corperation by id, amount of floors, amount of elevators and amount of users
+    const {id, MaxFloor, Elevators, Users } = req.query;
+    let results = [...CorpArray];
+
+    if (id) results = results.filter(r => +r.id === +id);
+    if (MaxFloor) results = results.filter(r => +r.MaxFloor === +MaxFloor);
+    if (Elevators) results = results.filter(r => +r.Elevators === +Elevators);
+    if (Users) results = results.filter(r => +r.Users === +Users);
+
     res.send(CorpArray);
 });
 
 //get a list of all elevators
 app.get('/api/elevators',(req,res) =>
 {
-    res.send(ElevatorArray);
+    //we can search and filter elevators by id, what corperation it belongs to, what currentfloors they are own, and current activity
+    const { id, corpid, currentActivity,currentFloor, availibleFloor } = req.query;
+    let results = [...ElevatorArray];
+
+    if (id) results = results.filter(r => +r.id === +id);
+    if (corpid) results = results.filter(r => +r.corpid === +corpid);
+    if (currentFloor) results = results.filter(r => +r.currentFloor === +currentFloor);
+    if (availibleFloor) results = results.filter(r => +r.availibleFloor === +availibleFloor);
+    if (currentActivity) results = results.filter(r => r.currentActivity === currentActivity);
+
+    res.send(results);
 });
 
 //get a list of all users

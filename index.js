@@ -23,15 +23,16 @@ app.use(express.json());
 app.listen(port, () => console.log(`Server http://localhost:${port} is live!`));
 
 //App Vars. We will generate random data so each time we launch the app it will be a different simulation.
-let WorldTime = 0; //World simulation time
-let userIDs = 0; //gives us amount of total users
-let eleIDs = 0; //gives us amount of total elevators
-let corpIDs = 0; //gives us amount of total corperation
+let CorpAmount = 10; //deault spawn how many corperation.
+let WorldTime = 0; //World simulation time.
+let userIDs = 0; //gives us amount of total users.
+let eleIDs = 0; //gives us amount of total elevators.
+let corpIDs = 0; //gives us amount of total corperation.
 const LunchFloors = [3,7,11,15,19,23]; //we designate lunch floors. lunch floors can also be work floors.
 const WorkFloors = [0,1,2,4,5,6,8,9,11] //we designate work floors but work floors cannot be designated as lunch floors.
-let CorpArray = []; //Array of generated corperations
-let ElevatorArray = []; //Array of generated elevators
-let UserArray = []; //Array of generated user created by our PUT API. Normally we would write this to our database
+let CorpArray = []; //Array of generated corperations.
+let ElevatorArray = []; //Array of generated elevators.
+let UserArray = []; //Array of generated user created by our PUT API. Normally we would write this to our database.
 let ElevatorActivity = ["Idle","OpenDoor","CloseDoor","MovingUp","MovingDown","Stuck"];
 let UserActivity = ["Idle","Moving","InsideElevator","ExitElevator","Working","AtLunch","DoneWithWork"];
 //START OF CORPERATION - Generate our Corperation and construct API
@@ -55,15 +56,16 @@ function GenerateCorp(howManyElevators,howManyUsers)
 
     //Creating Elevators
     for(let i = 0; i < howManyElevators; i++){
-       Corp.ElevatorsArrays[eleIDs] = GenerateElevators(corpIDs);
+       Corp.ElevatorsArrays[i] = GenerateElevators(corpIDs);
     }
 
     //Creating Users
     for(let i = 0; i < howManyUsers; i++){
-       Corp.UsersArray[userIDs] = GenerateNewUser(nameGen.getRandomName());
+       Corp.UsersArray[i] = GenerateNewUser(nameGen.getRandomName());
     }
 
-    console.log("Corp: " + Corp.id + "\nMax Floors: " + Corp.MaxFloor + "\nElevators Amount: " + Corp.Elevators + "\nUsers Amount: " + Corp.Users)
+    console.log("Corp: " + Corp.id + "\nMax Floors: " + Corp.MaxFloor + "\nElevators Amount: " + Corp.Elevators + "\nUsers Amount: " + Corp.Users +"\n");
+    
     //Update our corpID
     corpIDs++;
 }
@@ -229,7 +231,7 @@ app.get('/api/corps/',(req,res) =>
     if (Elevators) results = results.filter(r => +r.Elevators === +Elevators);
     if (Users) results = results.filter(r => +r.Users === +Users);
 
-    res.send(CorpArray);
+    res.send(results);
 });
 
 //get a list of all elevators
@@ -270,11 +272,11 @@ app.get('/api/users/',(req,res) =>
 });
 
 //START APP
-
 //We can generate this multiple times to increase simulation amount. Elevators and Users will be contain in their corperation
-GenerateCorp(getRandomNumber(1,30),getRandomNumber(10,100));
-
-
+for(let i = 0; i < CorpAmount; i++){
+    GenerateCorp(getRandomNumber(1,30),getRandomNumber(10,100));
+}
+console.log("Total Corperation Spawned: " + corpIDs + "\n" + "Total Elevators Spawned: " + eleIDs + "\n" + "Total Users Sapwned: " + userIDs + "\n")
 //END APP
 
 

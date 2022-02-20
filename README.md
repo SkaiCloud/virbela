@@ -6,7 +6,7 @@
 2. run "npm install" to install all dependencies
 3. run "npm start" a script will run nodemon
 
-### <p>Once started the index.js script will spawn 1 corperation with a random max floor level, random amount of elevators and random amount of elevator users.</p>
+### <p>Once started the index.js script will spawn 1 corperation with a random max floor level, random amount of elevators and random amount of elevator users. When your local server is launched you can come back to this readme test out the endpoints without having to type it in.</p>
 
 ## **PUT**
 |API Endpoints|Description|

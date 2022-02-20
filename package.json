@@ -9,17 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/SkaiCloud/virbela_exercise2.git"
+    "url": "git+ssh://git@github.com:SkaiCloud/virbela.git"
   },
   "author": "Khen Prel (SkaiCloud)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SkaiCloud/virbela_exercise2/issues"
+    "url": "https://github.com/SkaiCloud/virbela/issues"
   },
-  "homepage": "https://github.com/SkaiCloud/virbela_exercise2#readme",
+  "homepage": "https://github.com/SkaiCloud/virbela#readme",
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "react-unity-webgl": "^8.7.4"
   }
 }

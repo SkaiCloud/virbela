@@ -1,27 +1,45 @@
-# Virbela Coding Test #
+# Virbela Coding Test
 
-Welcome. We've created this test to gain insights into your development skills. Please follow the instructions below.
+## How to run this codes test.
 
-### Test overview ###
+1. Clone this respository into an empty workspace.
+2. run "npm install" to install all dependencies
+3. run "npm start" a script will run nodemon
 
-In this test you'll be asked to complete one or more exercises. When completed you'll push this repo to a public repository for evaluation. After evaluation, your contact at Virbela will reach out to you with next steps.
+### <p>Once started the index.js script will spawn 1 corperation with a random max floor level, random amount of elevators and random amount of elevator users.</p>
 
-Feel free to use whatever resources you'd typically use when doing development work at a job. Internet searches, books, etc. are all acceptable sources. Your friend, internet coder for hire, or an already completed test are not.
+## **PUT**
+|API Endpoints|Description|
+|-----------|-------------|
+|http://localhost:4000/api/updateElevator/#| Update elevator data in a single endpoint.|
+|http://localhost:4000/api/updateEleFloor/#| Update elevator current floor.|
+|http://localhost:4000/api/updateEleCurCap/#| Update elevator current capacity.|
+|http://localhost:4000/api/updateEleAct/#| Update elevator current activity.|
 
-### Instructions ###
+![Insomnia or Postman](./img/Insomnia.png)
 
-* Clone this repository to your development machine.
-* Navigate to the exercise you've been instructed to complete for detailed instructions.
-
-**Once you have completed your exercise:**
-
-* Commit and push the entire repository, with your completed project, back into a repository host of your choice (bitbucket, github, gitlab, etc)
-* Share your project URL with your Virbela contact (Recruiter or Hiring Manager)
-
-### Exercises ###
-
-* [Exercise 2](./Exercise2/EXERCISE_2.md)
-
-### If you have questions ###
-
-* Reach out to your Virbela contact (Recruiter or Hiring Manager)
+## **GET**
+|API Endpoints|Description|
+|-----------|-------------|
+|<b>Corperation</b>|
+|http://localhost:4000/api/corps/|Return all corperation and it's data.|
+|http://localhost:4000/api/corps/?id=#|Return a corperation with specific id.|
+|http://localhost:4000/api/corps/?MaxFloor=#|Return all corperation with specific max floor level.|
+|<b>Elevators</b>|
+|http://localhost:4000/api/elevators/|Return all elevators.|
+|http://localhost:4000/api/elevators/?id=#|Return elevators with unique id.|
+|http://localhost:4000/api/elevators/?corpid=#|Return elevators that belong to a specific corperation.|
+|http://localhost:4000/api/elevators/?currentFloor=#|Return all elevators that are currently on a specific floors.|
+|http://localhost:4000/api/elevators/?currentCapacity=#|Return all elevators with specific capacity.|
+|http://localhost:4000/api/elevators/?availibleFloor=#|Return all elevators with specific max floors.|
+|<b>Elevator users</b>| |
+|http://localhost:4000/api/users/|Return all users.|
+|http://localhost:4000/api/users/?id=#|Return a user with a unique id.|
+|http://localhost:4000/api/users/?corpid=#|Return all user that belong to a corperation id.|
+|http://localhost:4000/api/users/?currentActivity=|Retrun all user filter by activity. valid strings: Idle, Moving, InsideElevator, ExitElevator, Working, AtLunch, DoneWithWork|
+|http://localhost:4000/api/users/?userName=|Return a user by a username. NOTE: it's randomly generated name. You can find by calling the /users/ endpoint.|
+|http://localhost:4000/api/users/?workfloor=#|Return all user working on a specific floor.|
+|http://localhost:4000/api/users/?lunchfloor=#|Return all user with their favorite lunch floor.|
+|http://localhost:4000/api/users/?startHour=#|Return all user with common starting work hours.|
+|http://localhost:4000/api/users/?lunchHour=#|Return all user with common starting lunch hours.|
+|http://localhost:4000/api/users/?endHour=#|Return all user with common ending work hours.|

@@ -45,7 +45,9 @@ function GenerateCorp(howManyElevators,howManyUsers)
         id: corpIDs,
         MaxFloor: Math.floor(getRandomNumber(2, sortedArray.length)),
         Elevators: howManyElevators,
-        Users: howManyUsers
+        ElevatorsArrays: [],
+        Users: howManyUsers,
+        UsersArray:[]
     }
 
     //Normally we add this value to a database
@@ -53,12 +55,12 @@ function GenerateCorp(howManyElevators,howManyUsers)
 
     //Creating Elevators
     for(let i = 0; i < howManyElevators; i++){
-        GenerateElevators(corpIDs);
+       Corp.ElevatorsArrays[eleIDs] = GenerateElevators(corpIDs);
     }
 
     //Creating Users
     for(let i = 0; i < howManyUsers; i++){
-        GenerateNewUser(nameGen.getRandomName());
+       Corp.UsersArray[userIDs] = GenerateNewUser(nameGen.getRandomName());
     }
 
     console.log("Corp: " + Corp.id + "\nMax Floors: " + Corp.MaxFloor + "\nElevators Amount: " + Corp.Elevators + "\nUsers Amount: " + Corp.Users)
@@ -66,8 +68,7 @@ function GenerateCorp(howManyElevators,howManyUsers)
     corpIDs++;
 }
 
-function getCorpMaxFloor(id)
-{
+function getCorpMaxFloor(id){
     return CorpArray[id].MaxFloor;
 }
 //END OF CORPERATION
@@ -81,6 +82,8 @@ function GenerateElevators(corpid)
         corpid: corpid,
         currentActivity: ElevatorActivity[0],
         currentFloor: 0,
+        pendingFloors: [],
+        passengers: [],
         currentCapacity:0,
         maxcapacity: 10,
         availibleFloor: getCorpMaxFloor(corpid),
@@ -91,6 +94,8 @@ function GenerateElevators(corpid)
 
     //Update unique elevator ID
     eleIDs++;
+
+    return ele;
 }
 
 //START OF OUR USER DATA - Generate our user's data.
@@ -155,10 +160,10 @@ function getRandomNumber(min, max) {
 }
 
 //PUT API
-//SATISFY PHASE 2
-app.put('/api/updateElevators/:id',(req,res) => {
+//SATISFY PHASE 2. Update a single elevator value on a single endpoint.
+app.put('/api/updateElevator/:id',(req,res) => {
 
-    //grab the id for the endpoin
+    //grab the id for the endpoint
     const id = req.params.id;
 
     //Update data as nesscesary
@@ -169,11 +174,51 @@ app.put('/api/updateElevators/:id',(req,res) => {
     //Display result to user
     res.send(ElevatorArray[id]);
 });
+
+//Update elevator floor
+app.put('/api/updateEleFloor/:id',(req,res) => {
+
+    //grab the id for the endpoint
+    const id = req.params.id;
+
+    //Update data as nesscesary
+    ElevatorArray[id].currentFloor = req.body.currentFloor;
+
+    //Display result to user
+    res.send(ElevatorArray[id]);
+});
+
+//Update elevator current capacity.
+app.put('/api/updateEleCurCap/:id',(req,res) => {
+
+    //grab the id for the endpoint
+    const id = req.params.id;
+
+    //Update data as nesscesary
+    ElevatorArray[id].currentCapacity = req.body.currentCapacity;
+
+    //Display result to user
+    res.send(ElevatorArray[id]);
+});
+
+//Update elevator Activity
+app.put('/api/updateEleAct/:id',(req,res) => {
+
+    //grab the id for the endpoint
+    const id = req.params.id;
+
+    //Update data as nesscesary
+    ElevatorArray[id].currentActivity = req.body.currentActivity;
+
+    //Display result to user
+    res.send(ElevatorArray[id]);
+});
+
 //PUT API END
 
 //GET API START
 //get a list of all corperation
-app.get('/api/corps',(req,res) =>
+app.get('/api/corps/',(req,res) =>
 {
     //we can search and filter corperation by id, amount of floors, amount of elevators and amount of users
     const { id, MaxFloor, Elevators, Users } = req.query;
@@ -188,7 +233,7 @@ app.get('/api/corps',(req,res) =>
 });
 
 //get a list of all elevators
-app.get('/api/elevators',(req,res) =>
+app.get('/api/elevators/',(req,res) =>
 {
     //we can search and filter elevators by id, what corperation it belongs to, what currentfloors they are own, and current activity
     const { id, corpid, currentActivity,currentFloor, availibleFloor, maxcapacity } = req.query;
@@ -205,7 +250,7 @@ app.get('/api/elevators',(req,res) =>
 });
 
 //get a list of all users
-app.get('/api/users',(req,res) =>
+app.get('/api/users/',(req,res) =>
 {
     //we can search and filter user by any if there data
     const { id, corpid,workfloor,lunchfloor,startHour,lunchHour,endHour,currentActivity, userName } = req.query; 

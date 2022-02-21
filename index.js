@@ -11,12 +11,20 @@ const nameGen = require('./src/nameGenerator');
 //create our server
 const express = require('express');
 const app = express();
+const path = require('path');
 
-//if our env file is missing we will default to port 3000
-const port = process.env.PORT || 3000;
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 //let use a middleware to convert our data into a json format
 app.use(express.json());
+
+//add middleware to serve our unity webgl
+app.use(express.static("public"));
+
+//if our env file is missing we will default to port 3000
+const port = process.env.PORT || 3000;
 
 //instalize our server
 app.listen(port, () => console.log(`Server http://localhost:${port} is live!`));
@@ -117,7 +125,8 @@ function GenerateNewUser(newUser)
         lunchfloor: LunchFloors[Math.floor(Math.random() * LunchFloors.length)],
         startHour: varstartHour,
         lunchHour: varlunchHour,
-        endHour: varendHour
+        endHour: varendHour,
+        currentfloor: 0
     }
 
     //increment our unique ID and add to our users array

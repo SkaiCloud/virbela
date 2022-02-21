@@ -10,7 +10,6 @@ const nameGen = require('./src/nameGenerator');
 
 //create our server
 const express = require('express');
-const res = require('express/lib/response');
 const app = express();
 
 //if our env file is missing we will default to port 3000
@@ -23,8 +22,9 @@ app.use(express.json());
 app.listen(port, () => console.log(`Server http://localhost:${port} is live!`));
 
 //App Vars. We will generate random data so each time we launch the app it will be a different simulation.
-let CorpAmount = 10; //deault spawn how many corperation.
-let WorldTime = 0; //World simulation time.
+let CorpAmount = 1; //deault spawn how many corperation.
+let WorldTimeHours = 0; //World simulation time hours.
+let WorldTimeMinutes = 0; //World simulation time minutes.
 let userIDs = 0; //gives us amount of total users.
 let eleIDs = 0; //gives us amount of total elevators.
 let corpIDs = 0; //gives us amount of total corperation.
@@ -276,7 +276,30 @@ app.get('/api/users/',(req,res) =>
 for(let i = 0; i < CorpAmount; i++){
     GenerateCorp(getRandomNumber(1,30),getRandomNumber(10,100));
 }
+
 console.log("Total Corperation Spawned: " + corpIDs + "\n" + "Total Elevators Spawned: " + eleIDs + "\n" + "Total Users Sapwned: " + userIDs + "\n")
+
+// <---------------------------------------------TRYING TO GET SOME EXTRA CREDIT AND ATTEMPT PHASE 3 ------------------------------------------------------------->
+//Things we send to Unity3d
+/*
+const RunUnityMessage = setInterval(UnityMessage,100);
+
+function UnityMessage() {
+    console.log(getTime());
+}
+
+function getTime() {
+    WorldTimeMinutes += 1;
+    if(WorldTimeMinutes == 60)
+    {
+        WorldTimeMinutes = 0;
+        WorldTimeHours += 1;
+        if(WorldTimeHours == 24) WorldTimeHours = 0;
+    }
+
+    return WorldTimeHours.toString().padStart(2,0) + ":" + WorldTimeMinutes.toString().padStart(2,0);
+}
+*/
 //END APP
 
 

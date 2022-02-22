@@ -21,7 +21,7 @@
 ## **GET**
 |API Endpoints|Description|
 |-----------|-------------|
-|<b>Corperation</b>|
+|<b>corporation</b>|
 |http://localhost:4000/api/corps/|Return all corperation and it's data.|
 |http://localhost:4000/api/corps/?id=#|Return a corperation with specific id.|
 |http://localhost:4000/api/corps/?MaxFloor=#|Return all corperation with specific max floor level.|

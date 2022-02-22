@@ -294,6 +294,7 @@ console.log("Total Corperation Spawned: " + corpIDs + "\n" + "Total Elevators Sp
 // <---------------------------------------------TRYING TO GET SOME EXTRA CREDIT AND ATTEMPT PHASE 3 ------------------------------------------------------------->
 //Things we send to Unity3d to simulate our data and React for frontend GUI
 /*
+let WorldTimerString;
 const RunUnityMessage = setInterval(UnityMessage,100);
 
 function UnityMessage() {
@@ -309,8 +310,12 @@ function getTime() {
         if(WorldTimeHours == 24) WorldTimeHours = 0;
     }
 
-    return WorldTimeHours.toString().padStart(2,0) + ":" + WorldTimeMinutes.toString().padStart(2,0);
+    WorldTimerString = WorldTimeHours.toString().padStart(2,0) + ":" + WorldTimeMinutes.toString().padStart(2,0);
+
+    return WorldTimerString;
 }
+
+module.exports = { WorldTimerString };
 */
 //END APP
 

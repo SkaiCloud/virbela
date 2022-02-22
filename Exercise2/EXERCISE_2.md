@@ -54,8 +54,11 @@ Notes:
 ## Questions ##
 
  1. How can your implementation be optimized?
- 1. How much time did you spend on your implementation?
- 1. What was most challenging for you?
+    >I could furthur optimize these implementation by using multiple javascript files for each entity like one for corperation another for elevators and another for users. Because of the time constraints I put every entity in a single js file to eliminate the need for import and export of functions and variables.
+ 2. How much time did you spend on your implementation?
+	>I'v spent roughly 30hrs implementing towards Phase 3 so far as of 2/21/2022. I still have a day job that requires my attention and a family to tend to. I've always try to maintain a healthy work life balance but I do understand that time sensitive projects may sometime take priority to ensure we meet our objectives.
+ 3. What was most challenging for you?
+	>I think it was rush building a simulated world environment for the interviewer to quickly see how the data works visually. I've plan to create a world simulation build in unity3d and also visual data in the frontend built using react. The lack of resource with react and unity3d webgl has been a frustrating road blocks but with my tenacious effort I was able to get a working build using verious tricks I've learn from past experience. Sending data back and worth is another beast though but using the REST API is the easy way to achieving that goal. I would much rather use an event system to notify both Unity3d and React to update its data but that's something I may have to figure out own my own since the resource reguarding those implementation is limited.
 
 ## Next Steps ##
 

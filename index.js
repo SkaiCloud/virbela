@@ -13,11 +13,12 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
+//Serve default static page.
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-//let use a middleware to convert our data into a json format
+//let use a middleware to convert our data into json format
 app.use(express.json());
 
 //add middleware to serve our unity webgl
@@ -30,7 +31,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server http://localhost:${port} is live!`));
 
 //App Vars. We will generate random data so each time we launch the app it will be a different simulation.
-let CorpAmount = 1; //deault spawn how many corperation.
+let CorpAmount = 1; //default spawn how many corperation.
 let WorldTimeHours = 0; //World simulation time hours.
 let WorldTimeMinutes = 0; //World simulation time minutes.
 let userIDs = 0; //gives us amount of total users.
@@ -46,13 +47,13 @@ let UserActivity = ["Idle","Moving","InsideElevator","ExitElevator","Working","A
 //START OF CORPERATION - Generate our Corperation and construct API
 function GenerateCorp(howManyElevators,howManyUsers)
 {
-    //we dont know how much floor this corperation has so we comnbine all the floors together and sort it to get our highest floor
-    let sortedArray = LunchFloors + WorkFloors;
-    //sortedArray.sort();
+    //we comnbine all the floors together to give us its max floor level
+    let combinefloor = LunchFloors + WorkFloors;
+
     let Corp =
     {
         id: corpIDs,
-        MaxFloor: Math.floor(getRandomNumber(2, sortedArray.length)),
+        MaxFloor: Math.floor(getRandomNumber(2, combinefloor.length)),
         Elevators: howManyElevators,
         ElevatorsArrays: [],
         Users: howManyUsers,
@@ -72,12 +73,14 @@ function GenerateCorp(howManyElevators,howManyUsers)
        Corp.UsersArray[i] = GenerateNewUser(nameGen.getRandomName());
     }
 
+    //out put our creation to a console log.
     console.log("Corp: " + Corp.id + "\nMax Floors: " + Corp.MaxFloor + "\nElevators Amount: " + Corp.Elevators + "\nUsers Amount: " + Corp.Users +"\n");
     
     //Update our corpID
     corpIDs++;
 }
 
+//return the max floor amount from a corpid
 function getCorpMaxFloor(id){
     return CorpArray[id].MaxFloor;
 }
@@ -113,8 +116,7 @@ function GenerateNewUser(newUser)
 {
     const varstartHour = GenerateStartingHour(); //we generate a starting hour
     const varlunchHour = ConvertTo24HRS(varstartHour,4); //we allow our users to take lunch after 4hours of work
-    const varendHour = ConvertTo24HRS(varstartHour,8); //We allow our users to work for a min of 1hour
-
+    const varendHour = ConvertTo24HRS(varstartHour,8); //We allow our users to work for 8hrs
     let User =
     {
         id: userIDs,
@@ -186,7 +188,7 @@ app.put('/api/updateElevator/:id',(req,res) => {
     res.send(ElevatorArray[id]);
 });
 
-//Update elevator floor
+//Update elevator floor. require elevator id
 app.put('/api/updateEleFloor/:id',(req,res) => {
 
     //grab the id for the endpoint
@@ -199,7 +201,7 @@ app.put('/api/updateEleFloor/:id',(req,res) => {
     res.send(ElevatorArray[id]);
 });
 
-//Update elevator current capacity.
+//Update elevator current capacity. require elevator id
 app.put('/api/updateEleCurCap/:id',(req,res) => {
 
     //grab the id for the endpoint
@@ -212,7 +214,7 @@ app.put('/api/updateEleCurCap/:id',(req,res) => {
     res.send(ElevatorArray[id]);
 });
 
-//Update elevator Activity
+//Update elevator Activity. require elevator id
 app.put('/api/updateEleAct/:id',(req,res) => {
 
     //grab the id for the endpoint
@@ -246,7 +248,7 @@ app.get('/api/corps/',(req,res) =>
 //get a list of all elevators
 app.get('/api/elevators/',(req,res) =>
 {
-    //we can search and filter elevators by id, what corperation it belongs to, what currentfloors they are own, and current activity
+    //we can search and filter elevators by id, what corperation it belongs to, what currentfloors they are on, and current activities
     const { id, corpid, currentActivity,currentFloor, availibleFloor, maxcapacity } = req.query;
     let results = [...ElevatorArray];
 
@@ -286,10 +288,11 @@ for(let i = 0; i < CorpAmount; i++){
     GenerateCorp(getRandomNumber(1,30),getRandomNumber(10,100));
 }
 
+//we output the amount of data we generated as a whole
 console.log("Total Corperation Spawned: " + corpIDs + "\n" + "Total Elevators Spawned: " + eleIDs + "\n" + "Total Users Sapwned: " + userIDs + "\n")
 
 // <---------------------------------------------TRYING TO GET SOME EXTRA CREDIT AND ATTEMPT PHASE 3 ------------------------------------------------------------->
-//Things we send to Unity3d
+//Things we send to Unity3d to simulate our data and React for frontend GUI
 /*
 const RunUnityMessage = setInterval(UnityMessage,100);
 

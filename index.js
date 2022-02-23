@@ -31,7 +31,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server http://localhost:${port} is live!`));
 
 //App Vars. We will generate random data so each time we launch the app it will be a different simulation.
-let CorpAmount = 1; //default spawn how many corperation.
+let CorpAmount = 1; //default spawn how many corperation. NOTE: PLEASE DO NOT CHANGE THIS VALUE AS IT WILL BREAK UNITY3D SIMULATION.
 let WorldTimeHours = 0; //World simulation time hours.
 let WorldTimeMinutes = 0; //World simulation time minutes.
 let userIDs = 0; //gives us amount of total users.
@@ -178,11 +178,16 @@ app.put('/api/updateElevator/:id',(req,res) => {
 
     //grab the id for the endpoint
     const id = req.params.id;
-
+    
     //Update data as nesscesary
     ElevatorArray[id].currentFloor = req.body.currentFloor;
     ElevatorArray[id].currentCapacity = req.body.currentCapacity;
     ElevatorArray[id].currentActivity = req.body.currentActivity;
+    ElevatorArray[id].pendingFloors = req.body.pendingFloors;
+    ElevatorArray[id].passengers = req.body.passengers;
+
+    //Log when it update
+    console.log("Elevator ID: " + ElevatorArray[id].id + " Updated");
 
     //Display result to user
     res.send(ElevatorArray[id]);
@@ -197,6 +202,9 @@ app.put('/api/updateEleFloor/:id',(req,res) => {
     //Update data as nesscesary
     ElevatorArray[id].currentFloor = req.body.currentFloor;
 
+    //Log when it update
+    console.log("Elevator ID: " + ElevatorArray[id].id + " Floor Updated!");
+
     //Display result to user
     res.send(ElevatorArray[id]);
 });
@@ -210,6 +218,9 @@ app.put('/api/updateEleCurCap/:id',(req,res) => {
     //Update data as nesscesary
     ElevatorArray[id].currentCapacity = req.body.currentCapacity;
 
+    //Log when it update
+    console.log("Elevator ID: " + ElevatorArray[id].id + " Current Capacity Updated!");
+
     //Display result to user
     res.send(ElevatorArray[id]);
 });
@@ -220,8 +231,14 @@ app.put('/api/updateEleAct/:id',(req,res) => {
     //grab the id for the endpoint
     const id = req.params.id;
 
+    //Capture previous record
+    let previousRecord = ElevatorArray[id].currentActivity;
+    
     //Update data as nesscesary
     ElevatorArray[id].currentActivity = req.body.currentActivity;
+
+    //Log when it update
+    console.log("Elevator ID: " + ElevatorArray[id].id + " Updated it's Current Activity from: "+ previousRecord + " to: " + ElevatorArray[id].currentActivity);
 
     //Display result to user
     res.send(ElevatorArray[id]);
@@ -293,12 +310,11 @@ console.log("Total Corperation Spawned: " + corpIDs + "\n" + "Total Elevators Sp
 
 // <---------------------------------------------TRYING TO GET SOME EXTRA CREDIT AND ATTEMPT PHASE 3 ------------------------------------------------------------->
 //Things we send to Unity3d to simulate our data and React for frontend GUI
-/*
 let WorldTimerString;
 const RunUnityMessage = setInterval(UnityMessage,100);
 
 function UnityMessage() {
-    console.log(getTime());
+    getTime();
 }
 
 function getTime() {
@@ -315,8 +331,13 @@ function getTime() {
     return WorldTimerString;
 }
 
+//get a list of all users
+app.get('/api/gettime/',(req,res) =>
+{
+    res.send(WorldTimerString);
+});
+
 module.exports = { WorldTimerString };
-*/
 //END APP
 
 
